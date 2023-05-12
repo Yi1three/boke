@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rce</title>
+    <style> 
+        body{
+           overflow: scroll;
+            margin: 0;
+            background-color:#ffffff;
+        }
+        table{
+            border-collapse: collapse;
+        }
+        table,th,td{
+            border:1px solid black;
+        }
+        ul{
+            list-style-type:none;
+            margin:0;
+            overflow:hidden;
+            border:1px solid #C8C7C5;
+            background-color:#002FA7;
+        
+        }
+        li {
+        float:left;
+        }
+        li a{
+            display:block;
+            color:#C8C7C5;
+            text-align:center;
+            padding:14px 16px;
+            text-decoration:none;
+        }
+        li a:hover{
+        background-color:#0086a793
+        }
+    </style>
+</head>
+<body>
+   
+     <div style="background-color:#f1f1f1;
+        margin:10px auto;
+        text-align: center;
+        padding: 40px;
+        ">
+        <img src="https://www.helloimg.com/images/2023/04/15/oX9ldr.webp" alt="逸十三" width="120px" height="120px"/>
+        </div>
+        <div >
+        <ul>
+           
+            <li><a class="active" href="https://yi1three.github.io/boke/note.html">返回上一页</a></li>>
+           
+        </ul>
+</div>   
+<div style="max-width: 700px;
+        margin: 10% auto;
+        
+        padding:15px;
+        line-height: 1.7;"
+        >
+        <h1 style="text-align:center;">rce代码执行的漏洞学习笔记</h1>
+        <p style="text-indent:10px">解web12时准备总结这种方法：<br>
+cmd命令行代码执行漏洞：（以web12为例）<br>
+先?cmd=phpinfo();判断有无代码执行漏洞，回显成功。<br>
+接着?cmd=prrint_r(glob('*'));<br>
+print_r是打印，glob函数是查找文件和目录并以数组的形式返回。<br>
+发现有两个文件，<img src="https://i.postimg.cc/nr8kH8WF/2023-05-12-110222.png" width="60%" height="60%"></img><br>高亮第一个数字名称文件:cmd=highlight_file("903c00105c0141fd37ff47697e916e53616e33a72fb3774ab213b3e2a732f56f.php
+");<br>
+得到flag。<br>
+常见的几种绕过方法：<br>
+1.屏蔽;<br>
+将;换为?>表示php代码结束<br>
+2.屏蔽cat：<br>
+反写cat为tac</p>
+        </div>
+<div style="max-width: 700px;
+margin: 10% auto;
+
+padding:15px;
+line-height: 1.7;">
+<p style="text-align:center;"><b>待续</b></p>
+</div>
+</body>
+</html>
